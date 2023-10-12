@@ -15,12 +15,16 @@ function valfun(e) {
             // Clear button for  clear the display
             clear();
         }
+        // click enetr button for result so by using of this no need to add extra event listner with enter button for result
+        if(e.target.textContent === 'Enter'){
+            calculateResult();
+        }
 
         if (e.target.textContent === '+' || e.target.textContent === '-' || e.target.textContent === '*' || e.target.textContent === '/') {
             console.log('working');
             if (currentNum !== '') {
                 console.log('current Number value', currentNum);
-                if (currentOp !== '') {
+                if (currentOp !== '' ) {
                     calculateResult();
                 }
                 currentOp = e.target.textContent; // Store the operator itself
@@ -90,7 +94,6 @@ function calculateResult() {
     }
 }
 
-enterBtn.addEventListener('click', calculateResult);
 
 function clear() {
     res.value = '';
@@ -98,3 +101,7 @@ function clear() {
     currentOp = '';
     dotBtn = false;
 }
+
+// enterBtn.addEventListener('click', calculateResult); no need of this i make this inside if conditon
+
+
