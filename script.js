@@ -4,76 +4,71 @@ var currentNum = '';
 var currentOp = '';
 var enterBtn = document.getElementById('enterBtn');
 var dotBtn = false;
- 
 var container = document.querySelector('.container');
-
 container.addEventListener('click', valfun);
 
 function valfun(e) {
     if (e.target && e.target.tagName === 'BUTTON') {
         if (e.target.textContent === 'C') {
-            // Clear button for  clear the display
             clear();
+            return;
         }
-        // click enetr button for result so by using of this no need to add extra event listner with enter button for result
-        if(e.target.textContent === 'Enter'){
+
+        if (e.target.textContent === 'Enter') {
             calculateResult();
+            return;
         }
 
         if (e.target.textContent === '+' || e.target.textContent === '-' || e.target.textContent === '*' || e.target.textContent === '/') {
-            console.log('working');
-            if (currentNum !== '') {
-                console.log('current Number value', currentNum);
-                if (currentOp !== '' ) {
-                    calculateResult();
-                }
-                currentOp = e.target.textContent; // Store the operator itself
-                console.log('working condition of operator', currentOp);
-                // Update res window
-                res.value = currentNum + currentOp; 
-                console.log('res.value ==', res.value);
-                currentNum = '';
-                dotBtn = false;
-            }
+            handleOperatorClick(e.target.textContent);
+        } else if (e.target.textContent === '.') {
+            handleDotClick(e.target.value);
         } else {
-            if (e.target.textContent === '.') {
-                // Check if a dot has already been used in the current number
-                if (!dotBtn) {
-                    // If no dot has been used, add the dot
-                    currentNum += e.target.value;
-                    res.value += e.target.value;
-                    dotBtn = true;
-                }
-            } else {
-                currentNum += e.target.value;
-                res.value += e.target.value;
-                console.log('current number is=', currentNum);
-            }
+            handleNumberClick(e.target.value);
         }
     }
 }
 
+function handleOperatorClick(operator) {
+    if (currentNum !== '') {
+        if (currentOp !== '') {
+            calculateResult();
+        }
+        currentOp = operator;
+        res.value = currentNum + currentOp;
+        currentNum = '';
+        dotBtn = false;
+    }
+}
+
+function handleDotClick(value) {
+    if (!dotBtn) {
+        currentNum += value;
+        res.value += value;
+        dotBtn = true;
+    }
+}
+
+function handleNumberClick(value) {
+    currentNum += value;
+    res.value += value;
+}
+
 function calculateResult() {
     if (currentNum !== '' && currentOp !== '') {
-        console.log('inside calculate function current num', parseFloat(currentNum));
         var result;
         var number1 = parseFloat(res.value.split(currentOp));
-        console.log(`number 1 is ${number1}`);
         var number2 = parseFloat(currentNum);
-        console.log(`number 2 is ${number2}`);
 
         switch (currentOp) {
             case '+':
                 result = number1 + number2;
-                console.log(`result of addition = ${result}`);
                 break;
             case '-':
                 result = number1 - number2;
-                console.log(`result subtraction = ${result}`);
                 break;
             case '*':
                 result = number1 * number2;
-                console.log(`result multiplication = ${result}`);
                 break;
             case '/':
                 if (number2 === 0) {
@@ -81,19 +76,16 @@ function calculateResult() {
                     return;
                 }
                 result = number1 / number2;
-                console.log(`result results of division = ${result}`);
                 break;
             default:
                 break;
         }
 
-        res.value = result; // Update the display correctly
+        res.value = result;
         currentNum = result;
-        console.log(`current number is after update ${currentNum}`);
         currentOp = '';
     }
 }
-
 
 function clear() {
     res.value = '';
@@ -101,7 +93,4 @@ function clear() {
     currentOp = '';
     dotBtn = false;
 }
-
-// enterBtn.addEventListener('click', calculateResult); no need of this i make this inside if conditon
-
-
+// avoiding nesting 
