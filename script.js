@@ -1,91 +1,54 @@
+// avoiding nesting making code totaly readable
+// using event delegation
 var res = document.getElementById('result');
 var clr = document.getElementById('clear-btn');
 var currentNum = '';
 var currentOp = '';
+var Operator = ['+','-','*','/'];
 var enterBtn = document.getElementById('enterBtn');
 var dotBtn = false;
 var container = document.querySelector('.container');
 container.addEventListener('click', valfun);
 
 function valfun(e) {
-    if (e.target && e.target.tagName === 'BUTTON') {
+    // using event delegation 
+    if (!(e.target && e.target.tagName === 'BUTTON')) return ;
+
+    // Clear button for  clear the display
         if (e.target.textContent === 'C') {
-            clear();
-            return;
+                clear();
         }
 
-        if (e.target.textContent === 'Enter') {
+    // Eneter or equal button for calculate result
+
+        if(e.target.textContent === 'Enter'){
             calculateResult();
-            return;
         }
+
+
+        // for  operator
 
         if (e.target.textContent === '+' || e.target.textContent === '-' || e.target.textContent === '*' || e.target.textContent === '/') {
             handleOperatorClick(e.target.textContent);
-        } else if (e.target.textContent === '.') {
+        }
+
+         //for dot 
+
+        else if (e.target.textContent === '.'){
             handleDotClick(e.target.value);
-        } else {
+
+        }
+         
+        // for number 
+
+        else {
             handleNumberClick(e.target.value);
         }
+         
     }
-}
 
-function handleOperatorClick(operator) {
-    if (currentNum !== '') {
-        if (currentOp !== '') {
-            calculateResult();
-        }
-        currentOp = operator;
-        res.value = currentNum + currentOp;
-        currentNum = '';
-        dotBtn = false;
-    }
-}
 
-function handleDotClick(value) {
-    if (!dotBtn) {
-        currentNum += value;
-        res.value += value;
-        dotBtn = true;
-    }
-}
-
-function handleNumberClick(value) {
-    currentNum += value;
-    res.value += value;
-}
-
-function calculateResult() {
-    if (currentNum !== '' && currentOp !== '') {
-        var result;
-        var number1 = parseFloat(res.value.split(currentOp));
-        var number2 = parseFloat(currentNum);
-
-        switch (currentOp) {
-            case '+':
-                result = number1 + number2;
-                break;
-            case '-':
-                result = number1 - number2;
-                break;
-            case '*':
-                result = number1 * number2;
-                break;
-            case '/':
-                if (number2 === 0) {
-                    res.value = 'Error';
-                    return;
-                }
-                result = number1 / number2;
-                break;
-            default:
-                break;
-        }
-
-        res.value = result;
-        currentNum = result;
-        currentOp = '';
-    }
-}
+// for clear button
 
 function clear() {
     res.value = '';
@@ -93,4 +56,79 @@ function clear() {
     currentOp = '';
     dotBtn = false;
 }
-// avoiding nesting 
+
+// handling operator click
+function handleOperatorClick(operator){
+    if(currentNum !== ''){
+        if(currentOp !== ''){
+            calculateResult();
+        }
+        currentOp = operator;
+        res.value = currentNum + currentOp;
+        currentNum = '';
+        dotBtn = false;
+    }
+ }
+
+// handling number click
+
+function handleNumberClick(value){
+
+    currentNum += value;
+    res.value += value;
+  }
+
+
+// handling the dot click
+
+function handleDotClick(value){
+    if(!dotBtn) {
+        currentNum += value;
+        res.value += value;
+        dotBtn = true ;
+    }
+  }
+
+  // calculating result 
+function calculateResult() {
+    if (currentNum !== '' && currentOp !== '') {
+        console.log('inside calculate function current num', parseFloat(currentNum));
+        var result;
+        var number1 = parseFloat(res.value.split(currentOp));
+        console.log(`number 1 is ${number1}`);
+        var number2 = parseFloat(currentNum);
+        console.log(`number 2 is ${number2}`);
+
+        switch (currentOp) {
+            case '+':
+                result = number1 + number2;
+                console.log(`result of addition = ${result}`);
+                break;
+            case '-':
+                result = number1 - number2;
+                console.log(`result subtraction = ${result}`);
+                break;
+            case '*':
+                result = number1 * number2;
+                console.log(`result multiplication = ${result}`);
+                break;
+            case '/':
+                if (number2 === 0) {
+                    res.value = 'Error';
+                    return;
+                }
+                result = number1 / number2;
+                console.log(`result results of division = ${result}`);
+                break;
+            default:
+                break;
+        }
+
+        res.value = result; // Update the display correctly
+        currentNum = result;
+        console.log(`current number is ${currentNum}`);
+        currentOp = '';
+    }
+}
+
+
