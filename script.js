@@ -1,95 +1,59 @@
-// avoiding nesting making code totaly readable
-// using event delegation
 var res = document.getElementById('result');
 var clr = document.getElementById('clear-btn');
 var currentNum = '';
 var currentOp = '';
-var Operator = ['+','-','*','/'];
 var enterBtn = document.getElementById('enterBtn');
 var dotBtn = false;
 var container = document.querySelector('.container');
 container.addEventListener('click', valfun);
 
+// valfun is used for display input button on calculator screen
 function valfun(e) {
-    // using event delegation 
-    if (!(e.target && e.target.tagName === 'BUTTON')) return ;
-
-    // Clear button for  clear the display
+    if (e.target && e.target.tagName === 'BUTTON') {
         if (e.target.textContent === 'C') {
-                clear();
+            // Clear button for  clear the display
+            clear();
         }
-
-    // Eneter or equal button for calculate result
-
+        // click enetr button for result so by using of this no need to add extra event listner with enter button for result
         if(e.target.textContent === 'Enter'){
             calculateResult();
         }
 
-
-        // for  operator
-
         if (e.target.textContent === '+' || e.target.textContent === '-' || e.target.textContent === '*' || e.target.textContent === '/') {
-            handleOperatorClick(e.target.textContent);
+            console.log('working');
+            if (currentNum !== '' ) {
+                console.log('current Number value', currentNum);
+                if (currentOp !== '' ) {
+                    calculateResult();
+                }
+                currentOp = e.target.textContent; // Store the operator itself
+                console.log('working condition of operator', currentOp);
+                // Update res window
+                res.value = currentNum + currentOp; 
+                console.log('res.value ==', res.value);
+                currentNum = '';
+                dotBtn = false;
+            }
+        } else {
+            if (e.target.textContent === '.') {
+                // Check if a dot has already been used in the current number
+                if (!dotBtn) {
+                    // If no dot has been used, add the dot
+                    currentNum += e.target.value;
+                    res.value += e.target.value;
+                    dotBtn = true;
+                }
+            } 
+            
+            else {
+                currentNum += e.target.value;
+                res.value += e.target.value;
+                console.log('current number is=', currentNum);
+            }
         }
-
-         //for dot 
-
-        else if (e.target.textContent === '.'){
-            handleDotClick(e.target.value);
-
-        }
-         
-        // for number 
-
-        else {
-            handleNumberClick(e.target.value);
-        }
-         
     }
-
-
-// for clear button
-
-function clear() {
-    res.value = '';
-    currentNum = '';
-    currentOp = '';
-    dotBtn = false;
 }
 
-// handling operator click
-function handleOperatorClick(operator){
-    if(currentNum !== ''){
-        if(currentOp !== ''){
-            calculateResult();
-        }
-        currentOp = operator;
-        res.value = currentNum + currentOp;
-        currentNum = '';
-        dotBtn = false;
-    }
- }
-
-// handling number click
-
-function handleNumberClick(value){
-
-    currentNum += value;
-    res.value += value;
-  }
-
-
-// handling the dot click
-
-function handleDotClick(value){
-    if(!dotBtn) {
-        currentNum += value;
-        res.value += value;
-        dotBtn = true ;
-    }
-  }
-
-  // calculating result 
 function calculateResult() {
     if (currentNum !== '' && currentOp !== '') {
         console.log('inside calculate function current num', parseFloat(currentNum));
@@ -126,9 +90,15 @@ function calculateResult() {
 
         res.value = result; // Update the display correctly
         currentNum = result;
-        console.log(`current number is ${currentNum}`);
+        console.log(`current number isdddddddd ${currentNum}`);
         currentOp = '';
     }
 }
 
 
+function clear() {
+    res.value = '';
+    currentNum = '';
+    currentOp = '';
+    dotBtn = false;
+}
